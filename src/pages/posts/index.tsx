@@ -1,7 +1,22 @@
+import { GetStaticProps } from "next";
 import Head from "next/head";
+import { asText } from '@prismicio/helpers';
+import { createClient } from "../../services/prismic";
+
 import styles from './styles.module.scss';
 
-export default function Posts() {
+type Post = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  updatedAt: string;
+};
+
+interface PostsProps {
+  posts: Post[];
+}
+
+export default function Posts({ posts }: PostsProps) {
   return (
     <>
       <Head>
@@ -12,27 +27,45 @@ export default function Posts() {
 
       <main className={styles.container}>
         <div className={styles.post}>
-
-          <a href="">
-            <time>20 de julho de 2022</time>
-            <strong>Creating a Monorepo with Lerna</strong>
-            <p>Lorem ipsum dolor sit amet, consectetur adip Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus distinctio ipsum velit. Earum, sint eos? Deleniti, rem molestias mollitia culpa quisquam aut magni doloribus nobis modi eius! Quod, corrupti tempora.</p>
-          </a>
-
-          <a href="">
-            <time>20 de julho de 2022</time>
-            <strong>Creating a Monorepo with Lerna</strong>
-            <p>Lorem ipsum dolor sit amet, consectetur adip Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus distinctio ipsum velit. Earum, sint eos? Deleniti, rem molestias mollitia culpa quisquam aut magni doloribus nobis modi eius! Quod, corrupti tempora.</p>
-          </a>
-
-          <a href="">
-            <time>20 de julho de 2022</time>
-            <strong>Creating a Monorepo with Lerna</strong>
-            <p>Lorem ipsum dolor sit amet, consectetur adip Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus distinctio ipsum velit. Earum, sint eos? Deleniti, rem molestias mollitia culpa quisquam aut magni doloribus nobis modi eius! Quod, corrupti tempora.</p>
-          </a>
-
+          {
+            posts.map(post => (
+              <a
+                key={post.slug}
+                href=""
+              >
+                <time>{post.updatedAt}</time>
+                <strong>{post.title}</strong>
+                <p>{post.excerpt}</p>
+              </a>
+            ))
+          }
         </div>
       </main>
     </>
   )
+}
+
+export const getStaticProps: GetStaticProps = async ({ previewData }) => {
+  const client = createClient({ previewData, accessToken: process.env.PRISMIC_ACCESS_TOKEN })
+
+  const response = await client.getAllByType('post', {
+    fetchLinks: ['post.title', 'post.content']
+  });
+
+  const posts = response.map((post) => {
+    return ({
+      slug: post.uid,
+      title: asText(post.data.title),
+      excerpt: post.data.content.find(content => content.type === 'paragraph')?.text ?? '',
+      updatedAt: new Date(post.last_publication_date).toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      })
+    });
+  })
+
+  return {
+    props: { posts },
+  }
 }
