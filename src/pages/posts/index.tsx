@@ -4,6 +4,7 @@ import { asText } from '@prismicio/helpers';
 import { createClient } from "../../services/prismic";
 
 import styles from './styles.module.scss';
+import Link from "next/link";
 
 type Post = {
   slug: string;
@@ -21,7 +22,7 @@ export default function Posts({ posts }: PostsProps) {
     <>
       <Head>
         <title>
-          ignews | Posts
+          Posts | ig.news
         </title>
       </Head>
 
@@ -29,14 +30,16 @@ export default function Posts({ posts }: PostsProps) {
         <div className={styles.post}>
           {
             posts.map(post => (
-              <a
+              <Link
                 key={post.slug}
-                href=""
+                href={`/posts/${post.slug}`}
               >
-                <time>{post.updatedAt}</time>
-                <strong>{post.title}</strong>
-                <p>{post.excerpt}</p>
-              </a>
+                <a>
+                  <time>{post.updatedAt}</time>
+                  <strong>{post.title}</strong>
+                  <p>{post.excerpt}</p>
+                </a>
+              </Link>
             ))
           }
         </div>
@@ -46,9 +49,9 @@ export default function Posts({ posts }: PostsProps) {
 }
 
 export const getStaticProps: GetStaticProps = async ({ previewData }) => {
-  const client = createClient({ previewData, accessToken: process.env.PRISMIC_ACCESS_TOKEN })
+  const prismic = createClient({ previewData, accessToken: process.env.PRISMIC_ACCESS_TOKEN })
 
-  const response = await client.getAllByType('post', {
+  const response = await prismic.getAllByType('post', {
     fetchLinks: ['post.title', 'post.content']
   });
 
@@ -66,6 +69,8 @@ export const getStaticProps: GetStaticProps = async ({ previewData }) => {
   })
 
   return {
-    props: { posts },
+    props: {
+      posts
+    },
   }
 }
