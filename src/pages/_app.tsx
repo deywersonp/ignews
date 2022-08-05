@@ -5,7 +5,6 @@ import { Header } from '../components/Header';
 
 import { SessionProvider as NextAuthProvider } from 'next-auth/react'
 import Link from 'next/link'
-
 import { PrismicProvider } from '@prismicio/react'
 import { PrismicPreview } from '@prismicio/next'
 import { linkResolver, repositoryName } from '../services/prismic'
@@ -15,11 +14,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <PrismicProvider
       linkResolver={linkResolver}
-      internalLinkComponent={({ href, children, ...props }) => (
+      internalLinkComponent={({ href, ...props }) => (
         <Link href={href}>
-          <a {...props}>
-            {children}
-          </a>
+          <a {...props} />
         </Link>
       )}
     >
