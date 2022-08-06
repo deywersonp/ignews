@@ -59,7 +59,9 @@ export default function PostPreview({ post }: PostPreviewProps) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    paths: [],
+    paths: [
+      { params: { slug: 'mapas-com-react-usando-leaflet' } }
+    ],
     fallback: 'blocking',
   }
 };
@@ -67,7 +69,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params, previewData }) => {
   const { slug } = params;
 
-  const prismic = createClient({ previewData, accessToken: process.env.PRISMIC_ACCESS_TOKEN })
+  const prismic = createClient({ previewData })
 
   const response = await prismic.getByUID('post', String(slug));
 

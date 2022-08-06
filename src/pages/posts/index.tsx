@@ -49,7 +49,7 @@ export default function Posts({ posts }: PostsProps) {
 }
 
 export const getStaticProps: GetStaticProps = async ({ previewData }) => {
-  const prismic = createClient({ previewData, accessToken: process.env.PRISMIC_ACCESS_TOKEN })
+  const prismic = createClient({ previewData })
 
   const response = await prismic.getAllByType('post', {
     fetchLinks: ['post.title', 'post.content']

@@ -49,7 +49,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params, prev
     }
   };
 
-  const prismic = createClient({ previewData, req, accessToken: process.env.PRISMIC_ACCESS_TOKEN })
+  const prismic = createClient({ previewData, req })
 
   const response = await prismic.getByUID('post', String(slug));
 
