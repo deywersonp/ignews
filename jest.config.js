@@ -1,5 +1,5 @@
 module.exports = {
-  testIgnorePatterns: ["/node_modules/", "/.next/", "/.vscode/", "/customtypes/", "/.slicemachine/"],
+  testPathIgnorePatterns: ["/node_modules/", "/.next/", "/.vscode/", "/customtypes/", "/.slicemachine/"],
   setupFilesAfterEnv: [
     "<rootDir>/src/tests/setupTests.ts"
   ],
