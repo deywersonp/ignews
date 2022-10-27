@@ -8,6 +8,7 @@ module.exports = {
   },
   moduleNameMapper: {
     "\\.(scss|css|sass)$": "identity-obj-proxy",
+    '^.+\\.(png|jpg|jpeg|gif|webp|avif|ico|bmp|svg)$/i': `<rootDir>/__mocks__/fileMock.js`,
   },
   testEnvironment: "jsdom"
 }
