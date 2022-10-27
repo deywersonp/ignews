@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { Async } from '.';
 
 test('it renders correctly', async () => {
@@ -6,7 +6,5 @@ test('it renders correctly', async () => {
 
   expect(screen.getByText('Hello World')).toBeInTheDocument();
 
-  await waitFor(() => {
-    expect(screen.getByText('Button')).toBeInTheDocument();
-  }, { timeout: 4000 });
+  await waitForElementToBeRemoved(screen.queryByText('Button'));
 });
